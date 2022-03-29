@@ -17,11 +17,12 @@ Read about it online.
 import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
+import json
 from flask import Flask, request, render_template, g, redirect, Response
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+conf_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'configuration')
 app = Flask(__name__, template_folder=tmpl_dir)
-
 
 #
 # The following is a dummy URI that does not connect to a valid database. You will need to modify it to connect to your Part 2 database in order to use the data.
@@ -34,8 +35,11 @@ app = Flask(__name__, template_folder=tmpl_dir)
 #
 #     DATABASEURI = "postgresql://biliris:foobar@104.196.152.219/proj1part2"
 #
-DATABASEURI = "postgresql://user:password@104.196.152.219/proj1part2"
-
+# Import login details from configuration file.
+with open(conf_dir + '/config.json') as f:
+  config = json.load(f)
+ip_address = '35.237.31.151'
+DATABASEURI = "postgresql://" + config['user'] + ":" + config['password'] + "@" + ip_address + "/proj1part2"
 
 #
 # This line creates a database engine that knows how to connect to the URI above.
@@ -65,7 +69,7 @@ def before_request():
   try:
     g.conn = engine.connect()
   except:
-    print "uh oh, problem connecting to database"
+    print("uh oh, problem connecting to database")
     import traceback; traceback.print_exc()
     g.conn = None
 
@@ -107,7 +111,7 @@ def index():
   """
 
   # DEBUG: this is debugging code to see what request looks like
-  print request.args
+  print(request.args)
 
 
   #
@@ -203,7 +207,7 @@ if __name__ == "__main__":
     """
 
     HOST, PORT = host, port
-    print "running on %s:%d" % (HOST, PORT)
+    print("running on %s:%d" % (HOST, PORT))
     app.run(host=HOST, port=PORT, debug=debug, threaded=threaded)
 
 
