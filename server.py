@@ -38,7 +38,7 @@ app = Flask(__name__, template_folder=tmpl_dir)
 # Import login details from configuration file.
 with open(conf_dir + '/config.json') as f:
   config = json.load(f)
-ip_address = '35.237.31.151'
+ip_address = '35.211.155.104'
 DATABASEURI = "postgresql://" + config['user'] + ":" + config['password'] + "@" + ip_address + "/proj1part2"
 
 #
