@@ -72,4 +72,4 @@ We want to build a restaurant management system for restaurants and customers ne
 
 Final E/R Diagram
 
-![E_R Diagram]((https://github.com/jialin1210/restaurant-management-system/blob/master/E_R\ Diagram.png?raw=true)
+![E_R Diagram](https://github.com/Jialin1210/restaurant-management-system/blob/master/E_R%20Diagram.png)
