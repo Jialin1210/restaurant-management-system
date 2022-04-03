@@ -6,7 +6,7 @@ Example Webserver
 
 To run locally:
 
-    python server.py
+    python3 server.py
 
 Go to http://localhost:8111 in your browser.
 
@@ -18,7 +18,7 @@ import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 import json
-from flask import Flask, request, render_template, g, redirect, Response
+from flask import Flask, request, render_template, g, redirect, Response, abort, redirect, url_for
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 conf_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'configuration')
@@ -40,7 +40,6 @@ with open(conf_dir + '/config.json') as f:
   config = json.load(f)
 ip_address = '35.211.155.104'
 DATABASEURI = "postgresql://" + config['user'] + ":" + config['password'] + "@" + ip_address + "/proj1part2"
-
 #
 # This line creates a database engine that knows how to connect to the URI above.
 #
@@ -50,11 +49,12 @@ engine = create_engine(DATABASEURI)
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 #
-engine.execute("""CREATE TABLE IF NOT EXISTS test (
-  id serial,
-  name text
-);""")
-engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
+# engine.execute("""CREATE TABLE IF NOT EXISTS test (
+#   id serial,
+#   name text
+# );""")
+# engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
+# engine.execute("""DROP TABLE test;""")
 
 
 @app.before_request
@@ -117,10 +117,11 @@ def index():
   #
   # example of a database query
   #
-  cursor = g.conn.execute("SELECT name FROM test")
+
+  cursor = g.conn.execute("SELECT * FROM restaurant")
   names = []
   for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
+    names.append(result)  # can also be accessed using result[0]
   cursor.close()
 
   #
@@ -156,7 +157,9 @@ def index():
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
-  return render_template("index.html", **context)
+  @app.route('/index')
+  def main():
+    return render_template("index.html", **context)
 
 #
 # This is an example of a different path.  You can see it at:
