@@ -72,4 +72,4 @@ We want to build a restaurant management system for restaurants and customers ne
 
 Final E/R Diagram
 
-![E_R Diagram](/Users/jialin/Downloads/E_R Diagram.png)
+![E_R Diagram](/Users/jialin/Documents/1. Columbia University/Spring 2022/COMSW4111 - Introduction to Database/project1/project 1.3/restaurant-management-system/E_R Diagram.png)
