@@ -50,12 +50,12 @@ We want to build a restaurant management system for restaurants and customers ne
   * Search the waiter
     * Query restaurant information
     * current orders assigned to them
-  * assign order to chef
+* assign order to chef
   * [OPTIONAL] Update order status to ready once the order is completed
   
 * Menu Page
-  * search menu for restaurant
-  * Modify (add/drop) food item in the menu [in `present` table]
+  * Search menu for restaurant
+  * Add food item in the selected menu (can be either add new food item [in `food_item` table] or add existing food item to menu [in `presents` table])
 
 #### Parts Not Implemented
 

@@ -99,10 +99,62 @@ def home():
     result.append(c)
   return render_template("home.html", **dict(data = result))
 
-@app.route('/restaurant/', methods=['GET', 'POST'])
+@app.route('/restaurant/')
 def restaurant():
-  # TODO
-  return render_template('restaurant.html')
+  if request.method == 'GET':
+    cursor = g.conn.execute('SELECT * FROM restaurant')
+    result = []
+    for c in cursor:
+      result.append(c)
+    return render_template('restaurant.html', **dict(res = result))
+
+@app.route('/search_restaurant/', methods=['POST'])
+def search_restaurant():
+  name = request.form['name']
+  cursor = g.conn.execute(
+    "SELECT m.menu_name, f.food_name, f.unit_price "
+    "FROM restaurant r "
+    "LEFT JOIN menu m "
+    "ON r.restaurant_id = m.restaurant_id "
+    "LEFT JOIN presents p "
+    "ON p.menu_id = m.menu_id "
+    "LEFT JOIN food_item f "
+    "ON f.food_id = p.food_id "
+    "WHERE r.name = (%s)",
+    name
+  )
+  menu =[]
+  for c in cursor:
+    menu.append(c)
+  
+  cursor = g.conn.execute(
+      "SELECT r.name, CONCAT(w.first_name, ' ', w.last_name) as waiter_name, w.phone_number "
+      "FROM restaurant r "
+      "LEFT JOIN waiter w "
+      "ON r.restaurant_id = w.restaurant_id "
+      "WHERE r.name = (%s)",
+    name
+  )
+  waiter_info = []
+  for c in cursor:
+    waiter_info.append(c)
+  
+  cursor = g.conn.execute (
+      "SELECT r.name, CONCAT(c.first_name, ' ', c.last_name) as chef_name, c.phone_number "
+      "FROM restaurant r "
+      "LEFT JOIN waiter w "
+      "ON r.restaurant_id = w.restaurant_id "
+      "LEFT JOIN tells t "
+      "ON w.waiter_id = t.waiter_id "
+      "LEFT JOIN chef c "
+      "ON c.chef_id = t.chef_id "
+      "WHERE r.name = (%s)",
+    name
+  )
+  chef_info = []
+  for c in cursor:
+    chef_info.append(c)
+  return render_template('restaurant_view.html', **dict(data1 = menu, data2 = waiter_info, data3 = chef_info))
 
 @app.route('/customer/', methods=['GET', 'POST'])
 def customer():

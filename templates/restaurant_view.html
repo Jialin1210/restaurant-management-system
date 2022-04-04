@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital Management System</title>
+    <meta name="description" content="A description of your website">
+    <meta name="keywords" content="keyword1, keyword2, keyword3">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <div id="header">
+
+            <div class="top_banner">
+                <h1>Restaurant Management System</h1>
+            </div>
+
+        </div>
+
+        <div id="page_content">
+
+            <div class="left_side_bar">
+
+                <div class="col_1">
+                    <div class="box">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/restaurant">Restaurant</a></li>
+                            <li><a href="/customer">Customer</a></li>
+                            <li><a href="/waiter">Waiter</a></li>
+                            <li><a href="/chef">Chef</a></li>
+                            <li><a href="/menu">Menu</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="right_section">
+                <div class="common_content">
+                    <h2>Restaurant</h2>
+                    <hr>
+                    <form accept-charset="UTF-8" action="/search_restaurant/" autocomplete="on" method="POST">
+                        <fieldset>
+                            <legend>Search Restaurant:</legend> 
+                                <label for="name">Restaurant Name : </label>
+                                <input name="name" type="text"value="" /> <br />
+                                <input type="submit" value="Search" onclick="loading();">
+                        </fieldset>
+                    </form>
+                    <br />
+                    <b>Employee Information</b>
+                    <br />
+                    <b>Menu</b>
+                    <table class="base_qry_render">
+                        <thead>
+                            <tr>
+                                <th>Restaurant Name</th>
+                                <th>Menu Type</th>
+                                <th>Food Item</th>
+                                <th>Unit Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                                {% for row in data1 %}
+                                <tr>
+                                    {% for element in row %}
+                                    <td>{{element}}</td>
+                                    {% endfor %}    
+                                </tr>
+                                {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                    <br />
+                    <b>Waiter</b>
+                    <table class="base_qry_render">
+                        <thead>
+                            <tr>
+                                <th>Restaurant Name</th>
+                                <th>Waiter Name</th>
+                                <th>Phone Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                                {% for row in data2 %}
+                                <tr>
+                                    {% for element in row %}
+                                    <td>{{element}}</td>
+                                    {% endfor %}    
+                                </tr>
+                                {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                    <br />
+                    <b>Chef</b>
+                    <table class="base_qry_render">
+                        <thead>
+                            <tr>
+                                <th>Restaurant Name</th>
+                                <th>Chef Name</th>
+                                <th>Phone Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                                {% for row in data3 %}
+                                <tr>
+                                    {% for element in row %}
+                                    <td>{{element}}</td>
+                                    {% endfor %}    
+                                </tr>
+                                {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
