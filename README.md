@@ -50,8 +50,9 @@ We want to build a restaurant management system for restaurants and customers ne
   * Search the waiter
     * Query restaurant information
     * current orders assigned to them
-  * Give the order to a chef
-
+* assign order to chef
+  * [OPTIONAL] Update order status to ready once the order is completed
+  
 * Menu Page
   * search menu for restaurant
   * Modify (add/drop) food item in the menu [in `present` table]
@@ -64,7 +65,7 @@ We want to build a restaurant management system for restaurants and customers ne
 
 [TODO: Briefly describe two of the web pages that require (what you consider) the most interesting database operations in terms of what the pages are used for, how the page is related to the database operations (e.g., inputs on the page are used in such and such way to produce database operations that do such and such), and why you think they are interesting.]
 
-* Home Page[TODO]
+* [TODO]
 * Customer Page (Place an order): when the new customer place an order when he/she selects a restaurant, the order must be assigned to one of waiters in the chosen restaurant. So we randomly select the waiter from the restaurant and insert the order with customer information and waiter id.
 
 

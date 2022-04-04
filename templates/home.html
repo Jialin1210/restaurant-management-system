@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Restaurant management System</title>
+<meta name="description" content="A description of your website">
+<meta name="keywords" content="keyword1, keyword2, keyword3">
+<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<div id="wrapper"> 
+
+  <div id="header"> 
+
+    <div class="top_banner">
+      <h1>Restaurant Management System</h1>
+    </div>
+
+  </div>
+
+  <div id="page_content">
+	
+	<div class="left_side_bar"> 
+
+      <div class="col_1">
+        <div class="box">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/restaurant">Restaurant</a></li>
+            <li><a href="/customer">Customer</a></li>
+            <li><a href="/waiter">Waiter</a></li>
+            <li><a href="/chef">Chef</a></li>
+            <li><a href="/menu">Menu</a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="right_section">
+      <div class="common_content">
+        <h2>Home</h2>
+        <hr>
+        <table>
+          <thead>
+            <p>Here shows a brief summary of our system</p>
+            <li>Number of restaurants using our system: {{data[0][0]}}</li>
+            <li>Number of customers using our system: {{data[1][0]}}</li>
+            <li>Number of orders using our system: {{data[2][0]}}</li>
+            <!-- <div>
+              {% for n in data %}
+              <div>{{n}}</div>
+              {% endfor %}
+            </div> -->
+            <p></p>
+            <!-- contributor table -->
+            <tr>
+              <td>Contributors</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Lynn Zhu</td>
+            </tr>
+            <tr>
+              <td>Carrol Song</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+        
+    </div>
+
+    <div class="clear"></div>
+	
+  </div>
+  
+
+</div>
+
+</body></html>

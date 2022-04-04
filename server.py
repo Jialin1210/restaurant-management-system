@@ -6,7 +6,7 @@ Example Webserver
 
 To run locally:
 
-    python3 server.py
+    python server.py
 
 Go to http://localhost:8111 in your browser.
 
@@ -15,14 +15,16 @@ Read about it online.
 """
 
 import os
+import json
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
-import json
-from flask import Flask, request, render_template, g, redirect, Response, abort, redirect, url_for
+from flask import Flask, request, render_template, g, redirect, Response, abort, url_for
+import application
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 conf_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'configuration')
 app = Flask(__name__, template_folder=tmpl_dir)
+
 
 #
 # The following is a dummy URI that does not connect to a valid database. You will need to modify it to connect to your Part 2 database in order to use the data.
@@ -35,11 +37,11 @@ app = Flask(__name__, template_folder=tmpl_dir)
 #
 #     DATABASEURI = "postgresql://biliris:foobar@104.196.152.219/proj1part2"
 #
-# Import login details from configuration file.
 with open(conf_dir + '/config.json') as f:
   config = json.load(f)
 ip_address = '35.211.155.104'
 DATABASEURI = "postgresql://" + config['user'] + ":" + config['password'] + "@" + ip_address + "/proj1part2"
+
 #
 # This line creates a database engine that knows how to connect to the URI above.
 #
@@ -54,8 +56,7 @@ engine = create_engine(DATABASEURI)
 #   name text
 # );""")
 # engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
-# engine.execute("""DROP TABLE test;""")
-
+# engine.execute("""DROP TABLE test""")
 
 @app.before_request
 def before_request():
@@ -69,7 +70,7 @@ def before_request():
   try:
     g.conn = engine.connect()
   except:
-    print("uh oh, problem connecting to database")
+    print ("uh oh, problem connecting to database")
     import traceback; traceback.print_exc()
     g.conn = None
 
@@ -84,7 +85,49 @@ def teardown_request(exception):
   except Exception as e:
     pass
 
+@app.route('/')
+def home():
+  res_cnt = g.conn.execute("SELECT COUNT(DISTINCT name) FROM restaurant")
+  cus_cnt = g.conn.execute("SELECT COUNT(customer_id) FROM customer")
+  order_cnt = g.conn.execute("SELECT COUNT(order_id) FROM orders")
+  result = []
+  for c in res_cnt:
+    result.append(c)
+  for c in cus_cnt:
+    result.append(c)
+  for c in order_cnt:
+    result.append(c)
+  return render_template("home.html", **dict(data = result))
 
+@app.route('/restaurant/', methods=['GET', 'POST'])
+def restaurant():
+  # TODO
+  return render_template('restaurant.html')
+
+@app.route('/customer/', methods=['GET', 'POST'])
+def customer():
+  # TODO
+  return render_template('customer.html')
+
+@app.route('/waiter/', methods=['GET','POST'])
+def waiter():
+  # TODO
+  return render_template('waiter.html')
+
+@app.route('/chef/', methods=['GET','POST'])
+def chef():
+  # TODO
+  return render_template('chef.html')
+
+@app.route('/menu/', methods=['GET','POST'])
+def menu():
+  # TODO
+  return render_template('menu.html')
+
+
+'''
+EXAMPLES
+'''
 #
 # @app.route is a decorator around index() that means:
 #   run index() whenever the user tries to access the "/" path using a GET request
@@ -98,7 +141,7 @@ def teardown_request(exception):
 # see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
 # see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
 #
-@app.route('/')
+@app.route('/index')
 def index():
   """
   request is a special object that Flask provides to access web request information:
@@ -111,17 +154,16 @@ def index():
   """
 
   # DEBUG: this is debugging code to see what request looks like
-  print(request.args)
+  print (request.args)
 
 
   #
   # example of a database query
   #
-
-  cursor = g.conn.execute("SELECT * FROM restaurant")
+  cursor = g.conn.execute("SELECT name FROM test")
   names = []
   for result in cursor:
-    names.append(result)  # can also be accessed using result[0]
+    names.append(result['name'])  # can also be accessed using result[0]
   cursor.close()
 
   #
@@ -157,9 +199,7 @@ def index():
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
-  @app.route('/index')
-  def main():
-    return render_template("index.html", **context)
+  return render_template("index.html", **context)
 
 #
 # This is an example of a different path.  You can see it at:
@@ -178,9 +218,8 @@ def another():
 @app.route('/add', methods=['POST'])
 def add():
   name = request.form['name']
-  g.conn.execute('INSERT INTO test VALUES (NULL, ?)', name)
-  return redirect('/')
-
+  g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
+  return redirect('/index')
 
 @app.route('/login')
 def login():
@@ -210,7 +249,7 @@ if __name__ == "__main__":
     """
 
     HOST, PORT = host, port
-    print("running on %s:%d" % (HOST, PORT))
+    print ("running on %s:%d" % (HOST, PORT))
     app.run(host=HOST, port=PORT, debug=debug, threaded=threaded)
 
 
