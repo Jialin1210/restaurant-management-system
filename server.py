@@ -111,17 +111,41 @@ def customer():
 
 @app.route('/waiter/', methods=['GET','POST'])
 def waiter():
-  # TODO
+  if "GET" == request.method:
+    return render_template("waiters.html")
+  # else:
+  #  query = application.nurses.fetch(request.form)
+  # cursor = g.conn.execute(query)
+  # result = []
+  # for c in cursor:
+  #  result.append(c)
+  # return render_template("nurses.html", **dict(data=result))
   return render_template('waiter.html')
 
 @app.route('/chef/', methods=['GET','POST'])
 def chef():
-  # TODO
-  return render_template('chef.html')
+    if "GET" == request.method:
+      return render_template("chefs.html")
+    #else:
+    #  query = application.nurses.fetch(request.form)
+     # cursor = g.conn.execute(query)
+      #result = []
+     # for c in cursor:
+      #  result.append(c)
+     # return render_template("nurses.html", **dict(data=result))
+    return render_template('chef.html')
 
 @app.route('/menu/', methods=['GET','POST'])
 def menu():
-  # TODO
+  if "GET" == request.method:
+    return render_template("menu.html")
+  # else:
+  #  query = application.nurses.fetch(request.form)
+  # cursor = g.conn.execute(query)
+  # result = []
+  # for c in cursor:
+  #  result.append(c)
+  # return render_template("nurses.html", **dict(data=result))
   return render_template('menu.html')
 
 

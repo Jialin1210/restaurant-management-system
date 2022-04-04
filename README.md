@@ -50,7 +50,7 @@ We want to build a restaurant management system for restaurants and customers ne
   * Search the waiter
     * Query restaurant information
     * current orders assigned to them
-* assign order to chef
+  * assign order to chef
   * [OPTIONAL] Update order status to ready once the order is completed
   
 * Menu Page

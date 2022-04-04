@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital Management System</title>
+    <meta name="description" content="A description of your website">
+    <meta name="keywords" content="keyword1, keyword2, keyword3">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <div id="header">
+
+            <div class="top_banner">
+                <h1>Restaurant Management System</h1>
+            </div>
+
+        </div>
+
+        <div id="page_content">
+
+            <div class="left_side_bar">
+                <div class="col_1">
+                    <div class="box">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/restaurant">Restaurant</a></li>
+                            <li><a href="/customer">Customer</a></li>
+                            <li><a href="/waiter">Waiter</a></li>
+                            <li><a href="/chef">Chef</a></li>
+                            <li><a href="/menu">Menu</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right_section">
+                <div class="common_content">
+                    <h2>Chefs</h2>
+                    <hr>
+                    <form accept-charset="UTF-8" action="/chef" autocomplete="off" method="POST"
+                        target="_blank">
+                        <fieldset>
+                            <legend>Search the chef:</legend>
+                                <label for="chef_id">Chef_id : </label><input name="chef_id" type="text"value="" /> <br />
+                                <label for="first_name">First name : </label> <input name="first_name"type="text" value="" /> <br />
+                                <label for="last_name">Last name : </label><input name="last_name" type="text" value="" /> <br />
+                                <label for="phone_number">Phone Number : </label><input name="phone_number" type="text" value="" /> <br />
+                                <input type="submit" value="Search" onclick="loading();">
+                        </fieldset>
+                    </form>
+                    <br />
+                    <table class="base_qry_render">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Phone Number</th>
+                                <th>Orders</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                                {% for row in data %}
+                                <tr>
+                                    {% for element in row %}
+                                    <td>{{element}}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
