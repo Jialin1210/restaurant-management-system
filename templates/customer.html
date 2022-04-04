@@ -24,6 +24,7 @@
         <div id="page_content">
 
             <div class="left_side_bar">
+
                 <div class="col_1">
                     <div class="box">
                         <ul>
@@ -36,20 +37,18 @@
                         </ul>
                     </div>
                 </div>
+
             </div>
 
             <div class="right_section">
                 <div class="common_content">
-                    <h2>Chefs</h2>
+                    <h2>Customer</h2>
                     <hr>
-                    <form accept-charset="UTF-8" action="/chef" autocomplete="off" method="POST"
-                        target="_blank">
+                    <form accept-charset="UTF-8" action="/customer_menu/" autocomplete="off" method="POST">
                         <fieldset>
-                            <legend>Search the chef:</legend>
-                                <label for="chef_id">Chef_id : </label><input name="chef_id" type="text"value="" /> <br />
-                                <label for="first_name">First name : </label> <input name="first_name"type="text" value="" /> <br />
-                                <label for="last_name">Last name : </label><input name="last_name" type="text" value="" /> <br />
-                                <label for="phone_number">Phone Number : </label><input name="phone_number" type="text" value="" /> <br />
+                            <legend>Search Restaurant Menu:</legend> 
+                                <label for="name">Restaurant Name : </label>
+                                <input name="name" type="text"value="" /> <br />
                                 <input type="submit" value="Search" onclick="loading();">
                         </fieldset>
                     </form>
@@ -57,25 +56,39 @@
                     <table class="base_qry_render">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Phone Number</th>
-                                <th>Orders</th>
+                                <th>Restaurant ID</th>
+                                <th>Name</th>
+                                <th>Address</th>
+
                             </tr>
                         </thead>
                         <tbody>
-
-                                {% for row in data %}
+                            
+                                {% for row in res %}
                                 <tr>
                                     {% for element in row %}
                                     <td>{{element}}</td>
-                                    {% endfor %}
+                                    {% endfor %}    
                                 </tr>
                                 {% endfor %}
-
+                            
                         </tbody>
                     </table>
+                    <br />
+                    <form accept-charset="UTF-8" action="/add_order/" autocomplete="off" method="POST">
+                        <fieldset>
+                            <legend>Place an Order:</legend>
+                            <label for="first_name">First Name : </label><input name="first_name" type="text" value="" /> <br />
+                            <label for="last_name">Last Name : </label><input name="last_name" type="text" value="" /> <br />
+                            <label for="email_address">Email : </label><input name="email_address" type="text" value="" /> <br />
+                            <label for="phone_number">Phone Number: </label><input name="phone_number" type="text" value="" /> <br />
+                            <label for="existing_order">Add Existing Order? : </label><input name="existing_order" type="checkbox" value="" /> <br />
+                            <label for="order_id">Order ID : </label><input name="order_id" type="text" value="" /><br />
+                            <label for="food_item">Food Name : </label><input name="food_item" type="text" value="" /><br />
+                            <label for="quantity">Quantity : </label><input name="quantity" type="number" min="1" value="" /><br />
+                            <input type="submit" value="Create" onclick="loading();">
+                        </fieldset>
+                    </form>
                 </div>
             </div>
 

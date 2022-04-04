@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Restaurant Management System</title>
+    <title>Hospital Management System</title>
     <meta name="description" content="A description of your website">
     <meta name="keywords" content="keyword1, keyword2, keyword3">
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
@@ -42,29 +42,30 @@
 
             <div class="right_section">
                 <div class="common_content">
-                    <h2>Restaurant</h2>
+                    <h2>Customer</h2>
                     <hr>
-                    <form accept-charset="UTF-8" action="/search_restaurant/" autocomplete="off" method="POST">
+                    <form accept-charset="UTF-8" action="/customer_menu/" autocomplete="off" method="POST">
                         <fieldset>
-                            <legend>Search Restaurant:</legend> 
+                            <legend>Search Restaurant Menu:</legend> 
                                 <label for="name">Restaurant Name : </label>
                                 <input name="name" type="text"value="" /> <br />
                                 <input type="submit" value="Search" onclick="loading();">
                         </fieldset>
                     </form>
                     <br />
+                    <b>Menu</b>
                     <table class="base_qry_render">
                         <thead>
                             <tr>
-                                <th>Restaurant ID</th>
-                                <th>Name</th>
-                                <th>Address</th>
-
+                                <th>Restaurant Name</th>
+                                <th>Menu Type</th>
+                                <th>Food Item</th>
+                                <th>Unit Price</th>
                             </tr>
                         </thead>
                         <tbody>
                             
-                                {% for row in res %}
+                                {% for row in data %}
                                 <tr>
                                     {% for element in row %}
                                     <td>{{element}}</td>
@@ -74,6 +75,25 @@
                             
                         </tbody>
                     </table>
+                    <br />
+                    <form accept-charset="UTF-8" action="/add_order/" autocomplete="off" method="POST">
+                        <fieldset>
+                            <legend>Place an Order:</legend>
+                            <label for="first_name">First Name : </label><input name="first_name" type="text" value="" /> <br />
+                            <label for="last_name">Last Name : </label><input name="last_name" type="text" value="" /> <br />
+                            <label for="email_address">Email : </label><input name="email_address" type="text" value="" /> <br />
+                            <label for="phone_number">Phone Number: </label><input name="phone_number" type="text" value="" /> <br />
+                            <label for="existing_order">Add Existing Order? : </label><input name="existing_order" type="checkbox" value="" /> <br />
+                            <label for="order_id">Order ID : </label><input name="order_id" type="text" value="" /><br />
+                            <label for="food_item">Food Name : </label><input name="food_item" type="text" value="" /><br />
+                            <label for="quantity">Quantity : </label><input name="quantity" type="number" min="1" value="" /><br />
+                            <input type="submit" value="Create" onclick="loading();">
+                        </fieldset>
+                    </form>
+                    <br />
+                    <fieldset>
+                        <p>Note to Customer: You can only choose food from one menu type per order.</p>
+                    </fieldset>
                 </div>
             </div>
 

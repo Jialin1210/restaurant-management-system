@@ -107,12 +107,13 @@ def restaurant():
     for c in cursor:
       result.append(c)
     return render_template('restaurant.html', **dict(res = result))
+  return redirect("/")
 
 @app.route('/search_restaurant/', methods=['POST'])
 def search_restaurant():
   name = request.form['name']
   cursor = g.conn.execute(
-    "SELECT m.menu_name, f.food_name, f.unit_price "
+    "SELECT r.name, m.menu_name, f.food_name, f.unit_price "
     "FROM restaurant r "
     "LEFT JOIN menu m "
     "ON r.restaurant_id = m.restaurant_id "
@@ -120,7 +121,8 @@ def search_restaurant():
     "ON p.menu_id = m.menu_id "
     "LEFT JOIN food_item f "
     "ON f.food_id = p.food_id "
-    "WHERE r.name = (%s)",
+    "WHERE r.name = (%s) "
+    "ORDER BY m.menu_name DESC",
     name
   )
   menu =[]
@@ -158,8 +160,38 @@ def search_restaurant():
 
 @app.route('/customer/', methods=['GET', 'POST'])
 def customer():
-  # TODO
-  return render_template('customer.html')
+  if request.method == 'GET':
+    cursor = g.conn.execute('SELECT * FROM restaurant')
+    result = []
+    for c in cursor:
+      result.append(c)
+    return render_template('customer.html', **dict(res = result))
+  return redirect('/')
+
+@app.route('/customer_menu/', methods=['POST'])
+def customer_menu():
+  name = request.form['name']
+  cursor = g.conn.execute(
+      "SELECT r.name, m.menu_name, f.food_name, f.unit_price "
+      "FROM restaurant r "
+      "LEFT JOIN menu m "
+      "ON r.restaurant_id = m.restaurant_id "
+      "LEFT JOIN presents p "
+      "ON p.menu_id = m.menu_id "
+      "LEFT JOIN food_item f "
+      "ON f.food_id = p.food_id "
+      "WHERE r.name = (%s) "
+      "ORDER BY m.menu_name DESC",
+    name
+  )
+  menu =[]
+  for c in cursor:
+    menu.append(c)
+  return render_template('customer_menu_view.html', **dict(data = menu))
+
+@app.route('/add_order/', methods=['GET', 'POST'])
+def add_order():
+  return render_template('customer_order_view.html')
 
 @app.route('/waiter/', methods=['GET','POST'])
 def waiter():

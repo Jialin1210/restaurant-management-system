@@ -38,7 +38,7 @@ We want to build a restaurant management system for restaurants and customers ne
 * Customer Page
   * Select a restaurant near Columbia University
     * Browse the menu with food item of the chosen restaurant
-  * Place an order(s) by selecting food items from menu [insert values in `order` table, not `place` table]
+  * Place an order(s) by selecting food items from menu [insert values in `order` & `contains` table]
 
 * Chef Page
   * Search the chef
