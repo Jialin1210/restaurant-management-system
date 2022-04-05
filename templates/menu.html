@@ -40,14 +40,13 @@
 
             <div class="right_section">
                 <div class="common_content">
-                    <h2>Menus</h2>
+                    <h2>Menu</h2>
                     <hr>
-                    <form accept-charset="UTF-8" action="/menu" autocomplete="off" method="POST"
+                    <form accept-charset="UTF-8" action="/menu/" autocomplete="off" method="POST"
                         target="_blank">
                         <fieldset>
                             <legend>Search the menu:</legend>
                                 <label for="menu_id">Menu ID : </label><input name="menu_id" type="text"value="" /> <br />
-                                <label for="price">Price : </label> <input name="price"type="text" value="" /> <br />
                                 <input type="submit" value="Search" onclick="loading();">
                         </fieldset>
                     </form>
@@ -55,8 +54,10 @@
                     <table class="base_qry_render">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Price</th>
+                                <th>Restaurant Name</th>
+                                <th>Menu Name</th>
+                                <th>Food</th>
+                                <th>Unit Price</th>
                             </tr>
                         </thead>
                         <tbody>
