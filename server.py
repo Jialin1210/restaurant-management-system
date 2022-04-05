@@ -213,10 +213,6 @@ def add_order():
                             name=request.form['first_name'] + ' ' + request.form['last_name'],
                             price=total_price)
 
-@app.route('/test')
-def test():
-  return render_template('order_confirmation.html')
-
 @app.route('/waiter/', methods=['GET','POST'])
 def waiter():
   if "GET" == request.method:
