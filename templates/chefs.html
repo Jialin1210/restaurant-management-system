@@ -46,8 +46,8 @@
                         target="_blank">
                         <fieldset>
                             <legend>Search the chef:</legend>
-                                <label for="chef_id">Chef_id : </label><input name="chef_id" type="text"value="" /> <br />
-                                <label for="first_name">First name : </label> <input name="first_name"type="text" value="" /> <br />
+                                <label for="chef_id">Chef ID : </label><input name="chef_id" type="text"value="" /> <br />
+                                <label for="first_name">First name : </label><input name="first_name" type="text" value="" /> <br />
                                 <label for="last_name">Last name : </label><input name="last_name" type="text" value="" /> <br />
                                 <label for="phone_number">Phone Number : </label><input name="phone_number" type="text" value="" /> <br />
                                 <input type="submit" value="Search" onclick="loading();">
@@ -61,7 +61,9 @@
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Phone Number</th>
-                                <th>Orders</th>
+                                <th>Order ID</th>
+                                <th>Food Item</th>
+                                <th>Quantity</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,10 +78,23 @@
 
                         </tbody>
                     </table>
+                    <br />
+                    <form accept-charset="UTF-8" action="/add_order/" autocomplete="off" method="POST">
+                        <fieldset>
+                            <legend>Ready an order:</legend>
+                            <label for="chef_id">Chef ID : </label><input name="chef_id" type="text" value="" /> <br />
+                            <label for="order_id">Order ID : </label><input name="order_id" type="text" value="" /><br />
+                            <label for="ready_order">Is Order Ready? : </label><input name="ready_order" type="checkbox" value="" /> <br />
+                            <label for="chef_first_name">Chef First Name : </label><input name="chef_first_name" type="text" value="" /> <br />
+                            <label for="chef_last_name">Chef Last Name : </label><input name="chef_last_name" type="text" value="" /> <br />
+                            <label for="chef_phone_number">Chef Phone Number: </label><input name="chef_phone_number" type="text" value="" /> <br />
+                            <input type="submit" value="Done" onclick="loading();">
+                        </fieldset>
+                    </form>
                 </div>
             </div>
 
-            <div class="clear"></div>
+                <div class="clear"></div>
 
         </div>
 
