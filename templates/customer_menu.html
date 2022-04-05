@@ -47,8 +47,7 @@
                     <form accept-charset="UTF-8" action="/customer_menu/" autocomplete="off" method="POST">
                         <fieldset>
                             <legend>Search Restaurant Menu:</legend> 
-                                <label for="name">Restaurant Name : </label>
-                                <input name="name" type="text"value="" /> <br />
+                                <label for="name">Restaurant Name : </label><input name="name" required="required" type="text"value="" /> <br />
                                 <input type="submit" value="Search" onclick="loading();">
                         </fieldset>
                     </form>
@@ -78,21 +77,20 @@
                     <br />
                     <form accept-charset="UTF-8" action="/add_order/" autocomplete="off" method="POST">
                         <fieldset>
-                            <legend>Place an Order:</legend>
-                            <label for="first_name">First Name : </label><input name="first_name" type="text" value="" /> <br />
-                            <label for="last_name">Last Name : </label><input name="last_name" type="text" value="" /> <br />
-                            <label for="email_address">Email : </label><input name="email_address" type="text" value="" /> <br />
-                            <label for="phone_number">Phone Number: </label><input name="phone_number" type="text" value="" /> <br />
+                            <legend>Place Your Order:</legend>
+                            <label for="restaurant">Restaurant Name : </label><input name="restaurant" required="required" type="text" value="" /> <br />
+                            <label for="first_name">First Name : </label><input name="first_name" required="required" type="text" value="" /> <br />
+                            <label for="last_name">Last Name : </label><input name="last_name" required="required" type="text" value="" /> <br />
+                            <label for="email_address">Email : </label><input name="email_address" required="required" type="text" value="" /> <br />
+                            <label for="phone_number">Phone Number: </label><input name="phone_number" required="required" placeholder="000-000-0000" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" type="text" value="" /> <br />
                             <label for="existing_order">Add Existing Order? : </label><input name="existing_order" type="checkbox" value="" /> <br />
                             <label for="order_id">Order ID : </label><input name="order_id" type="text" value="" /><br />
-                            <label for="food_item">Food Name : </label><input name="food_item" type="text" value="" /><br />
-                            <label for="quantity">Quantity : </label><input name="quantity" type="number" min="1" value="" /><br />
-                            <input type="submit" value="Create" onclick="loading();">
-                        </fieldset>
+                            <label for="food_item">Food Name : </label><input name="food_item" required="required" type="text" value="" /><br />
+                            <input type="submit" value="Add" onclick="loading();">                     </fieldset>
                     </form>
                     <br />
                     <fieldset>
-                        <p>Note to Customer: You can only choose food from one menu type per order.</p>
+                        <p>Note to Customer: You can only choose food from <b>only one</b> menu type per order.</p>
                     </fieldset>
                 </div>
             </div>

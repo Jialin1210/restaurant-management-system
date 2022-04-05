@@ -2,7 +2,7 @@
 
 """
 Columbia's COMS W4111.003 Introduction to Databases
-Example Webserver
+Author: Lynn Zhu
 
 To run locally:
 
@@ -19,7 +19,7 @@ import json
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response, abort, url_for
-import application
+import application.restaurant, application.customer, application.orders, application.waiter
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 conf_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'configuration')
@@ -87,9 +87,9 @@ def teardown_request(exception):
 
 @app.route('/')
 def home():
-  res_cnt = g.conn.execute("SELECT COUNT(DISTINCT name) FROM restaurant")
-  cus_cnt = g.conn.execute("SELECT COUNT(customer_id) FROM customer")
-  order_cnt = g.conn.execute("SELECT COUNT(order_id) FROM orders")
+  res_cnt = g.conn.execute('''SELECT COUNT(DISTINCT name) FROM restaurant''')
+  cus_cnt = g.conn.execute('''SELECT COUNT(customer_id) FROM customer''')
+  order_cnt = g.conn.execute('''SELECT COUNT(order_id) FROM orders''')
   result = []
   for c in res_cnt:
     result.append(c)
@@ -97,12 +97,13 @@ def home():
     result.append(c)
   for c in order_cnt:
     result.append(c)
-  return render_template("home.html", **dict(data = result))
+  return render_template('home.html', **dict(data = result))
 
 @app.route('/restaurant/')
 def restaurant():
   if request.method == 'GET':
-    cursor = g.conn.execute('SELECT * FROM restaurant')
+    query = application.restaurant.fetch_all()
+    cursor = g.conn.execute(query)
     result = []
     for c in cursor:
       result.append(c)
@@ -112,47 +113,20 @@ def restaurant():
 @app.route('/search_restaurant/', methods=['POST'])
 def search_restaurant():
   name = request.form['name']
-  cursor = g.conn.execute(
-    "SELECT r.name, m.menu_name, f.food_name, f.unit_price "
-    "FROM restaurant r "
-    "LEFT JOIN menu m "
-    "ON r.restaurant_id = m.restaurant_id "
-    "LEFT JOIN presents p "
-    "ON p.menu_id = m.menu_id "
-    "LEFT JOIN food_item f "
-    "ON f.food_id = p.food_id "
-    "WHERE r.name = (%s) "
-    "ORDER BY m.menu_name DESC",
-    name
-  )
+  query = application.restaurant.fetch_menu(name)
+  cursor = g.conn.execute(query)
   menu =[]
   for c in cursor:
     menu.append(c)
   
-  cursor = g.conn.execute(
-      "SELECT r.name, CONCAT(w.first_name, ' ', w.last_name) as waiter_name, w.phone_number "
-      "FROM restaurant r "
-      "LEFT JOIN waiter w "
-      "ON r.restaurant_id = w.restaurant_id "
-      "WHERE r.name = (%s)",
-    name
-  )
+  query = application.restaurant.fetch_waiter(name)
+  cursor = g.conn.execute(query)
   waiter_info = []
   for c in cursor:
     waiter_info.append(c)
   
-  cursor = g.conn.execute (
-      "SELECT r.name, CONCAT(c.first_name, ' ', c.last_name) as chef_name, c.phone_number "
-      "FROM restaurant r "
-      "LEFT JOIN waiter w "
-      "ON r.restaurant_id = w.restaurant_id "
-      "LEFT JOIN tells t "
-      "ON w.waiter_id = t.waiter_id "
-      "LEFT JOIN chef c "
-      "ON c.chef_id = t.chef_id "
-      "WHERE r.name = (%s)",
-    name
-  )
+  query = application.restaurant.fetch_chef(name)
+  cursor = g.conn.execute(query)
   chef_info = []
   for c in cursor:
     chef_info.append(c)
@@ -161,7 +135,8 @@ def search_restaurant():
 @app.route('/customer/', methods=['GET', 'POST'])
 def customer():
   if request.method == 'GET':
-    cursor = g.conn.execute('SELECT * FROM restaurant')
+    query = application.restaurant.fetch_all()
+    cursor = g.conn.execute(query)
     result = []
     for c in cursor:
       result.append(c)
@@ -171,27 +146,76 @@ def customer():
 @app.route('/customer_menu/', methods=['POST'])
 def customer_menu():
   name = request.form['name']
-  cursor = g.conn.execute(
-      "SELECT r.name, m.menu_name, f.food_name, f.unit_price "
-      "FROM restaurant r "
-      "LEFT JOIN menu m "
-      "ON r.restaurant_id = m.restaurant_id "
-      "LEFT JOIN presents p "
-      "ON p.menu_id = m.menu_id "
-      "LEFT JOIN food_item f "
-      "ON f.food_id = p.food_id "
-      "WHERE r.name = (%s) "
-      "ORDER BY m.menu_name DESC",
-    name
-  )
+  query = application.restaurant.fetch_menu(name)
+  cursor = g.conn.execute(query)
   menu =[]
   for c in cursor:
     menu.append(c)
-  return render_template('customer_menu_view.html', **dict(data = menu))
+  return render_template('customer_menu.html', **dict(data = menu))
 
 @app.route('/add_order/', methods=['GET', 'POST'])
 def add_order():
-  return render_template('customer_order_view.html')
+  if request.method == 'POST':
+    query = application.orders.fetch_food_id(request.form['food_item']) # get food id
+    cursor = g.conn.execute(query)
+    food_id = 0
+    for c in cursor:
+      food_id = c
+    food_id = food_id[0] # convert rowproxy to int
+    
+    total_price = 0
+    if request.form.get('existing_order') is not None:
+      order_id = request.form['order_id']
+      query = application.orders.add_contains(order_id, food_id) # add food in existing order
+      cursor = g.conn.execute(query)
+
+      query = application.orders.fetch_total_price(order_id)
+      cursor = g.conn.execute(query)
+      for c in cursor:
+        total_price = c
+      total_price = total_price[0] # convert rowproxy to int
+    else:
+      query = application.customer.max_customer_id()
+      cursor = g.conn.execute(query)
+      customer_id = 0
+      for c in cursor:
+        customer_id = c
+      customer_id = customer_id[0] # convert rowproxy to int
+      query = application.customer.add_customer(customer_id, request.form) # insert new customer
+      cursor = g.conn.execute(query)
+
+      query = application.orders.max_order_id()
+      cursor = g.conn.execute(query)
+      order_id = 0
+      for c in cursor:
+        order_id = c
+      order_id = order_id[0] # convert rowproxy to int
+
+      query = application.waiter.fetch_waiter_id(request.form['restaurant'])
+      cursor = g.conn.execute(query)
+      waiter_id = 0
+      for c in cursor:
+        waiter_id = c
+      waiter_id = waiter_id[0] # convert rowproxy to int
+      query = application.orders.add_order(order_id, customer_id, waiter_id) # add new order
+      cursor = g.conn.execute(query)
+
+      order_id += 1 # update new order id
+      query = application.orders.add_contains(order_id, food_id) # add food in existing order
+      cursor = g.conn.execute(query)
+      
+      query = application.orders.fetch_total_price(order_id)
+      cursor = g.conn.execute(query)
+      for c in cursor:
+        total_price = c
+      total_price = total_price[0] # convert rowproxy to int
+    return render_template('order_confirmation.html', oid=order_id, 
+                            name=request.form['first_name'] + ' ' + request.form['last_name'],
+                            price=total_price)
+
+@app.route('/test')
+def test():
+  return render_template('order_confirmation.html')
 
 @app.route('/waiter/', methods=['GET','POST'])
 def waiter():
@@ -249,7 +273,7 @@ EXAMPLES
 # see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
 # see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
 #
-@app.route('/index')
+@app.route('/index/')
 def index():
   """
   request is a special object that Flask provides to access web request information:
