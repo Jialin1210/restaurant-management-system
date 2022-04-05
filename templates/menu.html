@@ -40,13 +40,13 @@
 
             <div class="right_section">
                 <div class="common_content">
-                    <h2>Waiters</h2>
+                    <h2>Menus</h2>
                     <hr>
                     <form accept-charset="UTF-8" action="/menu" autocomplete="off" method="POST"
                         target="_blank">
                         <fieldset>
                             <legend>Search the menu:</legend>
-                                <label for="menu_id">Menu_id : </label><input name="menu_id" type="text"value="" /> <br />
+                                <label for="menu_id">Menu ID : </label><input name="menu_id" type="text"value="" /> <br />
                                 <label for="price">Price : </label> <input name="price"type="text" value="" /> <br />
                                 <input type="submit" value="Search" onclick="loading();">
                         </fieldset>
@@ -71,6 +71,17 @@
 
                         </tbody>
                     </table>
+                    <br />
+                    <form accept-charset="UTF-8" action="/add_order/" autocomplete="off" method="POST">
+                        <fieldset>
+                            <legend>Add a food item:</legend>
+                            <label for="food_id">Food ID : </label><input name="food_id" type="text" value="" /> <br />
+                            <label for="food_name">Food Name : </label><input name="food_name" type="text" value="" /> <br />
+                            <label for="unit_price">Unit Price : </label><input name="unit_price" type="text" value="" /> <br />
+                            <label for="existing_food_item">Add Existing Food Item? : </label><input name="existing_order" type="checkbox" value="" /> <br />
+                            <input type="submit" value="Add" onclick="loading();">
+                        </fieldset>
+                    </form>
                 </div>
             </div>
 

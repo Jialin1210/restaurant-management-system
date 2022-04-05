@@ -217,26 +217,40 @@ def add_order():
 def waiter():
   if "GET" == request.method:
     return render_template("waiters.html")
-  # else:
-  #  query = application.nurses.fetch(request.form)
-  # cursor = g.conn.execute(query)
-  # result = []
-  # for c in cursor:
-  #  result.append(c)
-  # return render_template("nurses.html", **dict(data=result))
+  else:
+    id = request.form['waiter_id']
+    query = application.waiter.search_waiter(id, request.form)
+    cursor = g.conn.execute(query)
+    waiter_info = []
+    for c in cursor:
+      waiter_info.append(c)
+    query = application.waiter.search_order(id)
+    cursor = g.conn.execute(query)
+    order = []
+    for c in cursor:
+      order.append(c)
+    return render_template('waiter.html', **dict(data1=waiter_info, data2=order))
+
   return render_template('waiter.html')
 
 @app.route('/chef/', methods=['GET','POST'])
 def chef():
     if "GET" == request.method:
       return render_template("chefs.html")
-    #else:
-    #  query = application.nurses.fetch(request.form)
-     # cursor = g.conn.execute(query)
-      #result = []
-     # for c in cursor:
-      #  result.append(c)
-     # return render_template("nurses.html", **dict(data=result))
+    else:
+        id = request.form['chef_id']
+        query = application.chef.search_chef(id, request.form)
+        cursor = g.conn.execute(query)
+        chef_info = []
+        for c in cursor:
+          chef_info.append(c)
+        query = application.chef.search_order(id)
+        cursor = g.conn.execute(query)
+        order = []
+        for c in cursor:
+          order.append(c)
+        return render_template('chef.html', **dict(data1=chef_info, data2=order))
+
     return render_template('chef.html')
 
 @app.route('/menu/', methods=['GET','POST'])

@@ -9,3 +9,23 @@ def fetch_waiter_id(restaurant):
     LIMIT 1
     '''.format(restaurant)
     return query
+
+def search_waiter(id, request):
+    query = '''
+SELECT
+	w.waiter_id,
+	w.first_name,
+	w.last_name,
+	w.phone_number
+FROM
+	waiter w
+WHERE
+	w.waiter_id = '{wid}'
+AND w.first_name = '{first}'
+AND w.last_name = '{last}'
+AND w.phone_number = '{phone}'
+    '''.format(wid=str(int(id)),
+    first=request['first_name'],
+    last=request['last_name'],
+    phone=request['phone_number'])
+    return query
