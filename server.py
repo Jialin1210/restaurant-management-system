@@ -257,13 +257,15 @@ def chef():
 def menu():
   if "GET" == request.method:
     return render_template("menu.html")
-  # else:
-  #  query = application.nurses.fetch(request.form)
-  # cursor = g.conn.execute(query)
-  # result = []
-  # for c in cursor:
-  #  result.append(c)
-  # return render_template("nurses.html", **dict(data=result))
+  else:
+    id = request.form['menu_id']
+    query = application.menu.search_menu(id, request.form)
+    cursor = g.conn.execute(query)
+    menu_info = []
+    for c in cursor:
+      menu_info.append(c)
+    return render_template('menu.html', **dict(data1=menu_info))
+
   return render_template('menu.html')
 
 
