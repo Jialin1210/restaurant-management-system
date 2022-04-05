@@ -19,7 +19,8 @@ import json
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response, abort, url_for
-import application.restaurant, application.customer, application.orders, application.waiter
+import application.restaurant, application.customer, application.orders
+import application.waiter, application.chef, application.menu
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 conf_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'configuration')
@@ -231,8 +232,6 @@ def waiter():
       order.append(c)
     return render_template('waiter.html', **dict(data1=waiter_info, data2=order))
 
-  return render_template('waiter.html')
-
 @app.route('/chef/', methods=['GET','POST'])
 def chef():
     if "GET" == request.method:
@@ -251,8 +250,6 @@ def chef():
           order.append(c)
         return render_template('chef.html', **dict(data1=chef_info, data2=order))
 
-    return render_template('chef.html')
-
 @app.route('/menu/', methods=['GET','POST'])
 def menu():
   if "GET" == request.method:
@@ -265,8 +262,6 @@ def menu():
     for c in cursor:
       menu_info.append(c)
     return render_template('menu.html', **dict(data1=menu_info))
-
-  return render_template('menu.html')
 
 
 '''

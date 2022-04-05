@@ -24,7 +24,7 @@ WHERE
 AND w.first_name = '{first}'
 AND w.last_name = '{last}'
 AND w.phone_number = '{phone}'
-    '''.format(wid=str(int(id)),
+    '''.format(wid=id,
     first=request['first_name'],
     last=request['last_name'],
     phone=request['phone_number'])
