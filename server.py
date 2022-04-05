@@ -225,12 +225,21 @@ def waiter():
     waiter_info = []
     for c in cursor:
       waiter_info.append(c)
-    query = application.waiter.search_order(id)
+    query = application.waiter.search_order(id, request.form)
     cursor = g.conn.execute(query)
     order = []
     for c in cursor:
       order.append(c)
     return render_template('waiter.html', **dict(data1=waiter_info, data2=order))
+
+@app.route('/assign_order/', methods=['GET','POST'])
+def assign_order():
+  if "POST" == request.method:
+    cid = request.form['chef_id']
+    oid = request.form['order_id']
+    query = application.waiter.assign_order(cid, oid)
+    cursor = g.conn.execute(query)
+    return render_template("waiters.html")
 
 @app.route('/chef/', methods=['GET','POST'])
 def chef():
@@ -243,7 +252,7 @@ def chef():
         chef_info = []
         for c in cursor:
           chef_info.append(c)
-        query = application.chef.search_order(id)
+        query = application.chef.search_order(id, request.form)
         cursor = g.conn.execute(query)
         order = []
         for c in cursor:
@@ -299,11 +308,11 @@ def index():
   #
   # example of a database query
   #
-  cursor = g.conn.execute("SELECT name FROM tes
-  names = []
-  for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
-  cursor.close()
+  #cursor = g.conn.execute("SELECT name FROM tes
+  #names = []
+  #for result in cursor:
+  #  names.append(result['name'])  # can also be accessed using result[0]
+  #cursor.close()
 
   #
   # Flask uses Jinja templates, which is an extension to HTML where you can

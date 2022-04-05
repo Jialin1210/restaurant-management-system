@@ -29,3 +29,30 @@ AND w.phone_number = '{phone}'
     last=request['last_name'],
     phone=request['phone_number'])
     return query
+def search_order(id, request):
+    query = '''
+SELECT
+	o.order_id,
+	o.num_of_items,
+    o.total_price
+FROM waiter w
+LEFT JOIN takes t
+ON w.waiter_id = t.waiter_id
+LEFT JOIN order o
+ON o.order_id = t.order_id
+WHERE
+	w.waiter_id = '{wid}'
+AND w.first_name = '{first}'
+AND w.last_name = '{last}'
+AND w.phone_number = '{phone}'
+    '''.format(wid=id,
+    first=request['first_name'],
+    last=request['last_name'],
+    phone=request['phone_number'])
+    return query
+def assign_order(cid, oid):
+    query = '''
+       INSERT INTO prepares VALUES ({cid}, {oid})
+       '''.format(cid=str(int(cid)),
+                  oid=str(int(oid)))
+    return query
