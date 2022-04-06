@@ -47,9 +47,6 @@
                         <fieldset>
                             <legend>Search the waiter:</legend>
                                 <label for="waiter_id">Waiter ID : </label><input name="waiter_id" type="text"value="" /> <br />
-                                <label for="first_name">First name : </label> <input name="first_name"type="text" value="" /> <br />
-                                <label for="last_name">Last name : </label><input name="last_name" type="text" value="" /> <br />
-                                <label for="phone_number">Phone Number : </label><input name="phone_number" type="text" value="" /> <br />
                                 <input type="submit" value="Search" onclick="loading();">
                         </fieldset>
                     </form>
@@ -61,23 +58,35 @@
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Phone Number</th>
-                                <th>Order ID</th>
-                                <th>Food Item</th>
-                                <th>Quantity</th>
                             </tr>
                         </thead>
                         <tbody>
 
-                                {% for row in data %}
+                                {% for row in data1 %}
                                 <tr>
                                     {% for element in row %}
                                     <td>{{element}}</td>
-                                    {% for roww in data2 %}
-                                    <td>{{roww}}</td>
                                     {% endfor %}
+
+                                {% endfor %}
+                                    <table class="base_qry_render">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Food Item</th>
+                                <th>Unit Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                {% for row in data2 %}
+                                <tr>
+                                    {% for element in row %}
+                                    <td>{{element}}</td>
                                     {% endfor %}
                                 </tr>
                                 {% endfor %}
+                                </tr>
+
 
                         </tbody>
                     </table>

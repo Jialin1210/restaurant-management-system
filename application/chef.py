@@ -1,42 +1,24 @@
-def search_chef(id, request):
+def search_chef(id1):
     query = '''
-SELECT
-	c.chef_id,
-	c.first_name,
-	c.last_name,
-	c.phone_number
-FROM
-	chef c
-WHERE
-	c.chef_id = '{cid}'
-AND c.first_name = '{first}'
-AND c.last_name = '{last}'
-AND c.phone_number = '{phone}'
-    '''.format(cid=id,
-               first=request['first_name'],
-               last=request['last_name'],
-               phone=request['phone_number'])
+SELECT c.chef_id, c.first_name, c.last_name, c.phone_number
+FROM chef c
+WHERE c.chef_id = '{cid}'
+    '''.format(cid=id1)
     return query
 
 
-def search_order(id, request):
+def search_order(id2):
     query = '''
-SELECT
-	o.order_id,
-	o.num_of_items,
-    o.total_price
+SELECT o.order_id,f.food_name,f.unit_price
 FROM chef c
 LEFT JOIN prepares p
 ON c.chef_id = p.chef_id
-LEFT JOIN order o
+LEFT JOIN orders o
 ON o.order_id = p.order_id
-WHERE
-	c.chef_id = '{cid}'
-AND c.first_name = '{first}'
-AND c.last_name = '{last}'
-AND c.phone_number = '{phone}'
-    '''.format(cid=id,
-               first=request['first_name'],
-               last=request['last_name'],
-               phone=request['phone_number'])
+LEFT JOIN contains n
+ON n.order_id = o.order_id
+LEFT JOIN food_item f
+ON f.food_id = n.food_id
+WHERE c.chef_id = '{cid}'
+    '''.format(cid=id2)
     return query

@@ -10,49 +10,43 @@ def fetch_waiter_id(restaurant):
     '''.format(restaurant)
     return query
 
-def search_waiter(id, request):
+
+def search_waiter(id1):
     query = '''
-SELECT
-	w.waiter_id,
-	w.first_name,
-	w.last_name,
-	w.phone_number
-FROM
-	waiter w
-WHERE
-	w.waiter_id = '{wid}'
-AND w.first_name = '{first}'
-AND w.last_name = '{last}'
-AND w.phone_number = '{phone}'
-    '''.format(wid=id,
-    first=request['first_name'],
-    last=request['last_name'],
-    phone=request['phone_number'])
-    return query
-def search_order(id, request):
-    query = '''
-SELECT
-	o.order_id,
-	o.num_of_items,
-    o.total_price
+SELECT w.waiter_id, w.first_name, w.last_name, w.phone_number
 FROM waiter w
-LEFT JOIN takes t
-ON w.waiter_id = t.waiter_id
-LEFT JOIN order o
-ON o.order_id = t.order_id
-WHERE
-	w.waiter_id = '{wid}'
-AND w.first_name = '{first}'
-AND w.last_name = '{last}'
-AND w.phone_number = '{phone}'
-    '''.format(wid=id,
-    first=request['first_name'],
-    last=request['last_name'],
-    phone=request['phone_number'])
+WHERE w.waiter_id = '{wid}'
+    '''.format(wid=id1)
     return query
-def assign_order(cid, oid):
+
+
+def search_order(id2):
     query = '''
-       INSERT INTO prepares VALUES ({cid}, {oid})
-       '''.format(cid=str(int(cid)),
-                  oid=str(int(oid)))
+    SELECT o.order_id,f.food_name,f.unit_price
+    FROM waiter w
+    LEFT JOIN orders o
+    ON w.waiter_id = o.waiter_id
+    LEFT JOIN contains c
+    ON c.order_id = o.order_id
+    LEFT JOIN food_item f
+    ON f.food_id = c.food_id
+    WHERE w.waiter_id = '{wid}'
+        '''.format(wid=id2)
+    return query
+
+
+def assign_order(cid, wid):
+    query = '''
+      insert into tells values ({wid}, {cid})
+       '''.format(wid=str(int(wid)), cid=str(int(cid)))
+    return query
+
+
+def find_chef():
+    query = '''select chef_id from chef order by RANDOM() LIMIT 1'''
+    return query
+
+
+def find_waiter(oid):
+    query = ''' select waiter_id from orders where order_id = '{oid}' '''.format(oid=str(int(oid)))
     return query

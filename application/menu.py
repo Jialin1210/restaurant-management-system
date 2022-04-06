@@ -1,22 +1,34 @@
-def search_menu(id, request):
+def search_menu(id1):
     query = '''
-SELECT
-	m.menu_id,
-	m.price
-FROM
-	menu m
-WHERE
-	m.menu_id = '{mid}'
-AND m.price = '{price}'
-    '''.format(mid=str(int(id)),
-    price=request['price'])
+SELECT m.menu_id, m.menu_name, r.name, f.food_name, f.unit_price
+FROM menu m
+LEFT JOIN restaurant r
+ON m.restaurant_id = r.restaurant_id
+LEFT JOIN presents p
+ON m.menu_id = p.menu_id
+LEFT JOIN food_item f
+ON f.food_id = p.food_id
+WHERE m.menu_id = '{mid}'
+    '''.format(mid=id1)
     return query
-def add_item(id, request):
+
+# table: orders
+def max_food_id():
     query = '''
-           INSERT INTO food_item VALUES ({fid}, '{food_name}', '{unit_price}')
-           '''.format(fid=str(int(id)+1),
-                      unit_price=request['unit_price'])
+    SELECT MAX(food_id)
+    FROM food_item
+    '''
     return query
+
+def add_item(fid, name,price):
+    query = '''
+           INSERT INTO food_item VALUES ({fid}, '{food_name}', {unit_price})
+           '''.format(fid=str(int(fid)+1),
+                      food_name=name,
+                      unit_price=str(price))
+    return query
+
+
 def add_present(fid, mid):
     query = '''
                INSERT INTO food_item VALUES ({fid}, {mid})

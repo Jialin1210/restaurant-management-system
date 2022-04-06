@@ -220,25 +220,42 @@ def waiter():
     return render_template("waiters.html")
   else:
     id = request.form['waiter_id']
-    query = application.waiter.search_waiter(id, request.form)
+    query = application.waiter.search_waiter(id)
     cursor = g.conn.execute(query)
     waiter_info = []
     for c in cursor:
       waiter_info.append(c)
-    query = application.waiter.search_order(id, request.form)
+    query = application.waiter.search_order(id)
     cursor = g.conn.execute(query)
     order = []
     for c in cursor:
       order.append(c)
-    return render_template('waiter.html', **dict(data1=waiter_info, data2=order))
+    print(waiter_info,order)
+    return render_template('waiters.html', **dict(data1=waiter_info, data2=order))
 
 @app.route('/assign_order/', methods=['GET','POST'])
 def assign_order():
   if "POST" == request.method:
-    cid = request.form['chef_id']
+    query2 = application.waiter.find_chef()
+    cursor2 = g.conn.execute(query2)
+    chef = []
+    for c in cursor2:
+      chef.append(c)
     oid = request.form['order_id']
-    query = application.waiter.assign_order(cid, oid)
+    query3 = application.waiter.find_waiter(oid)
+    cursor3 = g.conn.execute(query3)
+    waiter = []
+    for c in cursor3:
+        waiter.append(c)
+
+    cid = chef[0][0]
+    wid = waiter[0][0]
+    query = application.waiter.assign_order(cid,wid)
     cursor = g.conn.execute(query)
+    order_info = []
+    for c in cursor:
+      order_info.append(c)
+
     return render_template("waiters.html")
 
 @app.route('/chef/', methods=['GET','POST'])
@@ -247,17 +264,18 @@ def chef():
       return render_template("chefs.html")
     else:
         id = request.form['chef_id']
-        query = application.chef.search_chef(id, request.form)
+        query = application.chef.search_chef(id)
         cursor = g.conn.execute(query)
         chef_info = []
         for c in cursor:
           chef_info.append(c)
-        query = application.chef.search_order(id, request.form)
+        query = application.chef.search_order(id)
         cursor = g.conn.execute(query)
         order = []
         for c in cursor:
           order.append(c)
-        return render_template('chef.html', **dict(data1=chef_info, data2=order))
+        print(chef_info,order)
+        return render_template('chefs.html', **dict(data1=chef_info, data2=order))
 
 @app.route('/menu/', methods=['GET','POST'])
 def menu():
@@ -265,7 +283,7 @@ def menu():
     return render_template("menu.html")
   else:
     id = request.form['menu_id']
-    query = application.menu.search_menu(id, request.form)
+    query = application.menu.search_menu(id)
     cursor = g.conn.execute(query)
     menu_info = []
     for c in cursor:
@@ -274,12 +292,19 @@ def menu():
 @app.route('/add_item/', methods=['GET','POST'])
 def add_item():
   if "POST" == request.method:
-    fid = request.form['food_id']
     mid = request.form['menu_id']
-    query1 = application.menu.add_item(fid, request.form)
-    query2 = application.menu.add_present(fid, mid)
+    query3 = application.menu.max_food_id()
+    cursor1 = g.conn.execute(query3)
+    food_id = 0
+    for c in cursor1:
+      food_id = c
+    food_id = food_id[0]  # convert rowproxy to int
+    print(request.form['unit_price'])
+    query1 = application.menu.add_item(food_id,request.form['food_name'],request.form['unit_price'])
+    query2 = application.menu.add_present(food_id+1, mid)
     cursor1 = g.conn.execute(query1)
     cursor2 = g.conn.execute(query2)
+
     return render_template("menu.html")
 
 '''
