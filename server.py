@@ -271,7 +271,16 @@ def menu():
     for c in cursor:
       menu_info.append(c)
     return render_template('menu.html', **dict(data1=menu_info))
-
+@app.route('/add_item/', methods=['GET','POST'])
+def add_item():
+  if "POST" == request.method:
+    fid = request.form['food_id']
+    mid = request.form['menu_id']
+    query1 = application.menu.add_item(fid, request.form)
+    query2 = application.menu.add_present(fid, mid)
+    cursor1 = g.conn.execute(query1)
+    cursor2 = g.conn.execute(query2)
+    return render_template("menu.html")
 
 '''
 EXAMPLES
