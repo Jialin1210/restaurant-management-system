@@ -230,7 +230,6 @@ def waiter():
     order = []
     for c in cursor:
       order.append(c)
-    print(waiter_info,order)
     return render_template('waiters.html', **dict(data1=waiter_info, data2=order))
 
 @app.route('/assign_order/', methods=['GET','POST'])
@@ -274,7 +273,6 @@ def chef():
         order = []
         for c in cursor:
           order.append(c)
-        print(chef_info,order)
         return render_template('chefs.html', **dict(data1=chef_info, data2=order))
 
 @app.route('/menu/', methods=['GET','POST'])
@@ -299,7 +297,6 @@ def add_item():
     for c in cursor1:
       food_id = c
     food_id = food_id[0]  # convert rowproxy to int
-    print(request.form['unit_price'])
     query1 = application.menu.add_item(food_id,request.form['food_name'],request.form['unit_price'])
     query2 = application.menu.add_present(food_id+1, mid)
     cursor1 = g.conn.execute(query1)

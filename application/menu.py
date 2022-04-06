@@ -23,9 +23,9 @@ def max_food_id():
 def add_item(fid, name,price):
     query = '''
            INSERT INTO food_item VALUES ({fid}, '{food_name}', {unit_price})
-           '''.format(fid=str(int(fid)+1),
+           '''.format(fid=fid+1,
                       food_name=name,
-                      unit_price=str(price))
+                      unit_price=price)
     return query
 
 
