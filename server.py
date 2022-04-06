@@ -232,31 +232,6 @@ def waiter():
       order.append(c)
     return render_template('waiters.html', **dict(data1=waiter_info, data2=order))
 
-@app.route('/assign_order/', methods=['GET','POST'])
-def assign_order():
-  if "POST" == request.method:
-    query2 = application.waiter.find_chef()
-    cursor2 = g.conn.execute(query2)
-    chef = []
-    for c in cursor2:
-      chef.append(c)
-    oid = request.form['order_id']
-    query3 = application.waiter.find_waiter(oid)
-    cursor3 = g.conn.execute(query3)
-    waiter = []
-    for c in cursor3:
-        waiter.append(c)
-
-    cid = chef[0][0]
-    wid = waiter[0][0]
-    query = application.waiter.assign_order(cid,wid)
-    cursor = g.conn.execute(query)
-    order_info = []
-    for c in cursor:
-      order_info.append(c)
-
-    return render_template("waiters.html")
-
 @app.route('/chef/', methods=['GET','POST'])
 def chef():
     if "GET" == request.method:
@@ -287,6 +262,7 @@ def menu():
     for c in cursor:
       menu_info.append(c)
     return render_template('menu.html', **dict(data1=menu_info))
+
 @app.route('/add_item/', methods=['GET','POST'])
 def add_item():
   if "POST" == request.method:
@@ -298,7 +274,7 @@ def add_item():
       food_id = c
     food_id = food_id[0]  # convert rowproxy to int
     query1 = application.menu.add_item(food_id,request.form['food_name'],request.form['unit_price'])
-    query2 = application.menu.add_present(food_id+1, mid)
+    query2 = application.menu.add_present(mid, food_id+1)
     cursor1 = g.conn.execute(query1)
     cursor2 = g.conn.execute(query2)
 
@@ -320,90 +296,90 @@ EXAMPLES
 # see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
 # see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
 #
-@app.route('/index/')
-def index():
-  """
-  request is a special object that Flask provides to access web request information:
+# @app.route('/index/')
+# def index():
+#   """
+#   request is a special object that Flask provides to access web request information:
 
-  request.method:   "GET" or "POST"
-  request.form:     if the browser submitted a form, this contains the data in the form
-  request.args:     dictionary of URL arguments, e.g., {a:1, b:2} for http://localhost?a=1&b=2
+#   request.method:   "GET" or "POST"
+#   request.form:     if the browser submitted a form, this contains the data in the form
+#   request.args:     dictionary of URL arguments, e.g., {a:1, b:2} for http://localhost?a=1&b=2
 
-  See its API: http://flask.pocoo.org/docs/0.10/api/#incoming-request-data
-  """
+#   See its API: http://flask.pocoo.org/docs/0.10/api/#incoming-request-data
+#   """
 
-  # DEBUG: this is debugging code to see what request looks like
-  print (request.args)
-
-
-  #
-  # example of a database query
-  #
-  #cursor = g.conn.execute("SELECT name FROM tes
-  #names = []
-  #for result in cursor:
-  #  names.append(result['name'])  # can also be accessed using result[0]
-  #cursor.close()
-
-  #
-  # Flask uses Jinja templates, which is an extension to HTML where you can
-  # pass data to a template and dynamically generate HTML based on the data
-  # (you can think of it as simple PHP)
-  # documentation: https://realpython.com/blog/python/primer-on-jinja-templating/
-  #
-  # You can see an example template in templates/index.html
-  #
-  # context are the variables that are passed to the template.
-  # for example, "data" key in the context variable defined below will be 
-  # accessible as a variable in index.html:
-  #
-  #     # will print: [u'grace hopper', u'alan turing', u'ada lovelace']
-  #     <div>{{data}}</div>
-  #     
-  #     # creates a <div> tag for each element in data
-  #     # will print: 
-  #     #
-  #     #   <div>grace hopper</div>
-  #     #   <div>alan turing</div>
-  #     #   <div>ada lovelace</div>
-  #     #
-  #     {% for n in data %}
-  #     <div>{{n}}</div>
-  #     {% endfor %}
-  #
-  context = dict(data = names)
+#   # DEBUG: this is debugging code to see what request looks like
+#   print (request.args)
 
 
-  #
-  # render_template looks in the templates/ folder for files.
-  # for example, the below file reads template/index.html
-  #
-  return render_template("index.html", **context)
+#   #
+#   # example of a database query
+#   #
+#   #cursor = g.conn.execute("SELECT name FROM tes
+#   #names = []
+#   #for result in cursor:
+#   #  names.append(result['name'])  # can also be accessed using result[0]
+#   #cursor.close()
 
-#
-# This is an example of a different path.  You can see it at:
-# 
-#     localhost:8111/another
-#
-# Notice that the function name is another() rather than index()
-# The functions for each app.route need to have different names
-#
-@app.route('/another')
-def another():
-  return render_template("another.html")
+#   #
+#   # Flask uses Jinja templates, which is an extension to HTML where you can
+#   # pass data to a template and dynamically generate HTML based on the data
+#   # (you can think of it as simple PHP)
+#   # documentation: https://realpython.com/blog/python/primer-on-jinja-templating/
+#   #
+#   # You can see an example template in templates/index.html
+#   #
+#   # context are the variables that are passed to the template.
+#   # for example, "data" key in the context variable defined below will be 
+#   # accessible as a variable in index.html:
+#   #
+#   #     # will print: [u'grace hopper', u'alan turing', u'ada lovelace']
+#   #     <div>{{data}}</div>
+#   #     
+#   #     # creates a <div> tag for each element in data
+#   #     # will print: 
+#   #     #
+#   #     #   <div>grace hopper</div>
+#   #     #   <div>alan turing</div>
+#   #     #   <div>ada lovelace</div>
+#   #     #
+#   #     {% for n in data %}
+#   #     <div>{{n}}</div>
+#   #     {% endfor %}
+#   #
+#   context = dict(data = names)
 
 
-# Example of adding new data to the database
-@app.route('/add', methods=['POST'])
-def add():
-  name = request.form['name']
-  g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
-  return redirect('/index')
+#   #
+#   # render_template looks in the templates/ folder for files.
+#   # for example, the below file reads template/index.html
+#   #
+#   return render_template("index.html", **context)
 
-@app.route('/login')
-def login():
-    abort(401)
-    this_is_never_executed()
+# #
+# # This is an example of a different path.  You can see it at:
+# # 
+# #     localhost:8111/another
+# #
+# # Notice that the function name is another() rather than index()
+# # The functions for each app.route need to have different names
+# #
+# @app.route('/another')
+# def another():
+#   return render_template("another.html")
+
+
+# # Example of adding new data to the database
+# @app.route('/add', methods=['POST'])
+# def add():
+#   name = request.form['name']
+#   g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
+#   return redirect('/index')
+
+# @app.route('/login')
+# def login():
+#     abort(401)
+#     this_is_never_executed()
 
 
 if __name__ == "__main__":

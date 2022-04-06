@@ -38,7 +38,7 @@ def search_order(id2):
 def assign_order(cid, wid):
     query = '''
       insert into tells values ({wid}, {cid})
-       '''.format(wid=str(int(wid)), cid=str(int(cid)))
+       '''.format(wid=wid, cid=cid)
     return query
 
 

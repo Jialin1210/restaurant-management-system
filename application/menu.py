@@ -29,9 +29,9 @@ def add_item(fid, name,price):
     return query
 
 
-def add_present(fid, mid):
+def add_present(mid, fid):
     query = '''
-               INSERT INTO food_item VALUES ({fid}, {mid})
-               '''.format(fid=str(int(fid)),
-                          mid=str(int(mid)))
+               INSERT INTO presents VALUES ({mid}, {fid})
+               '''.format(mid=mid,
+                          fid=fid)
     return query
