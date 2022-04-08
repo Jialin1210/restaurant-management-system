@@ -16,7 +16,7 @@
 
 ### Project Web Application URL
 
-* URL of web application: http://35.196.105.158:8111/
+* URL of web application: http://34.75.86.29:8111/
 
 ### Description
 
